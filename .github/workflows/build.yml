@@ -1,0 +1,50 @@
+name: Build and package
+
+on:
+  workflow_call:
+    inputs:
+      configuration:
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set short git commit SHA
+        run: |
+          calculatedSha=$(git rev-parse --short ${{ github.sha }})
+          echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
+      - name: Write version info
+        run: |
+          mkdir -p .my && touch .my/Directory.Build.props
+          echo '<Project>' >> .my/Directory.Build.props
+          echo '  <PropertyGroup>' >> .my/Directory.Build.props
+          echo "    <BuildVersion>${{ github.run_number }}</BuildVersion>" >> .my/Directory.Build.props
+          echo "    <PatchVersion>${{ github.run_attempt }}</PatchVersion>" >> .my/Directory.Build.props
+          echo "    <GitSha>${{ env.COMMIT_SHORT_SHA }}</GitSha>" >> .my/Directory.Build.props
+          echo '  </PropertyGroup>' >> .my/Directory.Build.props
+          echo '</Project>' >> .my/Directory.Build.props
+        
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 9.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore -c ${{inputs.configuration}}
+      - name: Test
+        run: dotnet test --no-build -c ${{inputs.configuration}}
+      - name: Pack
+        run: dotnet pack --no-build -c ${{inputs.configuration}}
+      - name: Stage artifacts
+        run: mkdir ./nupkg; find . -name "*.nupkg" -not -path "./nupkg/*"  -exec cp '{}' ./nupkg/  \;
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-packages
+          path: ./nupkg/
+          if-no-files-found: error

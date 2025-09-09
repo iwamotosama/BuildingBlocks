@@ -1,0 +1,38 @@
+<Project>
+  <!--
+  DO NOT MODIFY PROPERTIES HERE, override them in .my/Directory.Build.props instead.
+  .my/Directory.Build.props is gitignored so that any dev-environment specific 
+  properties aren't put in source
+  -->
+  <PropertyGroup>
+    <Authors>Nicholas Walker</Authors>
+    <Company>Nicholas Walker</Company>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RepositoryUrl>https://github.com/iwamotosama/BuildingBlocks</RepositoryUrl>
+  </PropertyGroup>
+  <PropertyGroup>
+    <MajorVersion>0</MajorVersion>
+    <MinorVersion>0</MinorVersion>
+    <BuildVersion>0</BuildVersion>
+    <PatchVersion>0</PatchVersion>
+    <GitSha>xxx</GitSha>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <RootNamespace>Nikuman.BuildingBlocks.$(MSBUildProjectName.Replace(" ", "_"))</RootNamespace>
+    <AssemblyName>$(RootNamespace)</AssemblyName>
+    <PackageId>$(RootNamespace)</PackageId>
+  </PropertyGroup>
+  
+  <ItemGroup Condition="$(MSBuildProjectDirectory.StartsWith('$(SolutionDir)src'))">
+    <InternalsVisibleTo Include="Test.Unit" />
+  </ItemGroup>
+  
+  <Import Project="$(SolutionDir).my/Directory.Build.props" Condition="Exists('$(SolutionDir).my/Directory.Build.props')" />
+  
+  <PropertyGroup>
+    <VersionPrefix>$(MajorVersion).$(MinorVersion).$(BuildVersion).$(PatchVersion)</VersionPrefix>
+    <VersionSuffix>$(GitSha)</VersionSuffix>
+  </PropertyGroup>
+
+</Project>

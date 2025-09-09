@@ -3,6 +3,8 @@ name: CI build
 on:
   push:
     branches: [ "main" ]
+    tags:
+      - 'v*'  
   pull_request:
     branches: [ "main" ]
 
@@ -11,3 +13,20 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       configuration: Release
+  publish:
+    if: startsWith(github.event.ref, 'refs/tags/v') # only if commit is tagged with a version number, i.e. v1.0, v1.1.1, etc
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: 9.0.x
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: nuget-packages
+    - name: Publish packages
+      run: find . -name "*.nupkg" -exec dotnet nuget push '{}' --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/iwamotosama/index.json" \;
+      

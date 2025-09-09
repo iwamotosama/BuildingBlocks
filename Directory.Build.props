@@ -25,7 +25,7 @@
   </PropertyGroup>
   
   <ItemGroup Condition="$(MSBuildProjectDirectory.StartsWith('$(SolutionDir)src'))">
-    <InternalsVisibleTo Include="Test.Unit" />
+    <InternalsVisibleTo Include="Nikuman.BuildingBlocks.Test.Unit" />
   </ItemGroup>
   
   <Import Project="$(SolutionDir).my/Directory.Build.props" Condition="Exists('$(SolutionDir).my/Directory.Build.props')" />

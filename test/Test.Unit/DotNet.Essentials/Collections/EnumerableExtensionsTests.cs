@@ -3,14 +3,8 @@ using System.Collections.Concurrent;
 
 namespace Nikuman.BuildingBlocks.Test.Unit.DotNet.Essentials.Collections;
 
-/// <summary>
-/// Tests the functionality of <see cref="EnumerableExtensions"/> 
-/// </summary>
 public class EnumerableExtensionsTests
 {
-    /// <summary>
-    /// Tests the functionality of <see cref="EnumerableExtensions.ForEach{T}(IEnumerable{T}, Action{T})"/> 
-    /// </summary>
     [Fact]
     public void TestForEach()
     {
@@ -30,10 +24,6 @@ public class EnumerableExtensionsTests
         Assert.Equal(15, sum);
     }
 
-    /// <summary>
-    /// Tests the functionality of <see cref="EnumerableExtensions.ForEach{T}(IEnumerable{T}, Func{T, Task})"/> 
-    /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous test</returns>
     [Fact]
     public async Task TestAsyncForEach()
     {

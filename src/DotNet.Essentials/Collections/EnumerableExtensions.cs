@@ -1,4 +1,4 @@
-namespace Nikuman.BuildingBlocks.DotNet.Essentials;
+namespace Nikuman.BuildingBlocks.DotNet.Essentials.Collections;
 
 /// <summary>
 /// Extensions to <see cref="IEnumerable{T}"/> 
@@ -29,5 +29,16 @@ public static class EnumerableExtensions
     public static Task ForEach<T>(this IEnumerable<T> col, Func<T, Task> asyncAction)
     {
         return Task.WhenAll(col.Select(elem => asyncAction(elem)));
+    }
+
+    /// <summary>
+    /// Returns a single-element <see cref="IEnumerable{T}"/> 
+    /// </summary>
+    /// <typeparam name="T">The <see cref="Type"/> of the element in the sequence</typeparam>
+    /// <param name="obj">The element to be included in the returned sequence</param>
+    /// <returns>An <see cref="IEnumerable{T}"/> with <paramref name="obj"/> as its only element</returns>
+    public static IEnumerable<T> One<T>(this T obj)
+    {
+        return Enumerable.Repeat(obj, 1);
     }
 }

@@ -1,4 +1,4 @@
-﻿using Nikuman.BuildingBlocks.DotNet.Essentials;
+﻿using Nikuman.BuildingBlocks.DotNet.Essentials.Collections;
 
 namespace Nikuman.BuildingBlocks.Data.Essentials;
 

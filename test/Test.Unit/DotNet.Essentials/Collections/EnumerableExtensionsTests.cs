@@ -1,4 +1,4 @@
-using Nikuman.BuildingBlocks.DotNet.Essentials;
+using Nikuman.BuildingBlocks.DotNet.Essentials.Collections;
 using System.Collections.Concurrent;
 
 namespace Nikuman.BuildingBlocks.Test.Unit.DotNet.Essentials.Collections;

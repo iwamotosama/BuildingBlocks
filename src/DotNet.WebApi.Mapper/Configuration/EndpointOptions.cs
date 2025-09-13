@@ -74,7 +74,7 @@ public class EndpointOptions
         /// <returns>This <see cref="EndpointOptionsBuilder"/></returns>
         public EndpointOptionsBuilder AddEndpoints(HttpMethod method, string prefix, Func<object?, IResult>? statusTransform = null, Func<Exception, IResult>? exceptionTransform = null)
         {
-            _specsBuilder.Add((mi => mi.Name.StartsWith(prefix), mi => (mi.Name[..prefix.Length], method), statusTransform ?? DefaultStatusTransform, exceptionTransform ?? DefaultExceptionTransform));
+            _specsBuilder.Add((mi => mi.Name.StartsWith(prefix), mi => (mi.Name[prefix.Length..], method), statusTransform ?? DefaultStatusTransform, exceptionTransform ?? DefaultExceptionTransform));
             return this;
         }
 

@@ -54,7 +54,7 @@ public static class EndpointRouteBuilderExtensions
                     continue;
                 }
                 var endpointSpec = spec.Value;
-                var endpoint = new Endpoint<TService>(candidateMethod, endpointSpec.StatusTransform, endpointSpec.ExceptionTransform);
+                var endpoint = new ReflectionEndpoint(candidateMethod, endpointSpec.StatusTransform, endpointSpec.ExceptionTransform);
 
                 var (endpointName, httpMethod) = endpointSpec.Method(candidateMethod);
                 var endpointSequence = pathSequence.Append(endpointName);
@@ -97,7 +97,7 @@ public static class EndpointRouteBuilderExtensions
                                 AddParameter(param, context.Request.Query[param.Name!]);
                             }
 
-                            return await endpoint.Invoke(service, paramsBuilder.ToArray());
+                            return await endpoint.Invoke(accessor(service), paramsBuilder.ToArray());
                         });
                 }
                 else
@@ -105,7 +105,7 @@ public static class EndpointRouteBuilderExtensions
                     GetMapper(httpMethod)(builder, string.Join('/', endpointSequence),
                         async ([FromServices] TService service) =>
                         {
-                            return await endpoint.Invoke(service, null);
+                            return await endpoint.Invoke(accessor(service), null);
                         });
                 }
             }

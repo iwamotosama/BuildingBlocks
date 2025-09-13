@@ -4,13 +4,13 @@ using Nikuman.BuildingBlocks.DotNet.Essentials.Reflection;
 
 namespace Nikuman.BuildingBlocks.DotNet.WebApi.Mapper;
 
-internal class Endpoint<TService>(MethodInfo method, Func<object?, IResult> statusTransform, Func<Exception, IResult> exceptionTransform)
+internal class ReflectionEndpoint(MethodInfo method, Func<object?, IResult> statusTransform, Func<Exception, IResult> exceptionTransform)
 {
     private readonly MethodInfo _method = method;
     private readonly Func<object?, IResult> _statusTransform = statusTransform;
     private readonly Func<Exception, IResult> _exceptionTransform = exceptionTransform;
 
-    public virtual async Task<IResult> Invoke(TService instance, object?[]? arguments)
+    public virtual async Task<IResult> Invoke(object? instance, object?[]? arguments)
     {
         try
         {

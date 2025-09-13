@@ -59,7 +59,7 @@ public class EndpointOptions
         private readonly Dictionary<Type, Func<string, object?>> _converters = new();
 
         /// <summary>
-        /// Adds Endpoints for methods whose names starts with the specified <paramref name="prefix"/>
+        /// Adds Endpoints via reflection by searchingfor methods whose names starts with the specified <paramref name="prefix"/>
         /// </summary>
         /// <param name="method">The <see cref="HttpMethod"/> for service calls with this prefix</param> 
         /// <param name="prefix">The method prefix</param>
@@ -72,14 +72,14 @@ public class EndpointOptions
         /// handling to the ASP.NET pipeline.
         /// </param>
         /// <returns>This <see cref="EndpointOptionsBuilder"/></returns>
-        public EndpointOptionsBuilder AddEndpoints(HttpMethod method, string prefix, Func<object?, IResult>? statusTransform = null, Func<Exception, IResult>? exceptionTransform = null)
+        public EndpointOptionsBuilder AddReflectedEndpoints(HttpMethod method, string prefix, Func<object?, IResult>? statusTransform = null, Func<Exception, IResult>? exceptionTransform = null)
         {
             _specsBuilder.Add((mi => mi.Name.StartsWith(prefix), mi => (mi.Name[prefix.Length..], method), statusTransform ?? DefaultStatusTransform, exceptionTransform ?? DefaultExceptionTransform));
             return this;
         }
 
         /// <summary>
-        /// Adds Endpoints with the selected <see cref="HttpMethod"/> as determined by <paramref name="methodSelector"/> 
+        /// Adds Endpoints via reflection with the selected <see cref="HttpMethod"/> as determined by <paramref name="methodSelector"/> 
         /// </summary>
         /// <param name="methodSelector">
         /// Delegate that returns the name and the <see cref="HttpMethod"/> that a given <see cref="MethodInfo"/> should be mapped as. 
@@ -94,7 +94,7 @@ public class EndpointOptions
         /// handling to the ASP.NET pipeline.
         /// </param>
         /// <returns>This <see cref="EndpointOptionsBuilder"/></returns>
-        public EndpointOptionsBuilder AddEndpoints(Func<MethodInfo, (string, HttpMethod)?> methodSelector, Func<object?, IResult>? statusTransform = null, Func<Exception, IResult>? exceptionTransform = null)
+        public EndpointOptionsBuilder AddReflectedEndpoints(Func<MethodInfo, (string, HttpMethod)?> methodSelector, Func<object?, IResult>? statusTransform = null, Func<Exception, IResult>? exceptionTransform = null)
         {
             _specsBuilder.Add((mi => methodSelector(mi).HasValue, mi => methodSelector(mi)!.Value, statusTransform ?? DefaultStatusTransform, exceptionTransform ?? DefaultExceptionTransform));
             return this;
